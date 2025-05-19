@@ -1,3 +1,6 @@
+//Algoritmos e Estrutura de Dados II
+//Vitória Marca Santa Lucia - 23200577
+
 #include <stdio.h>
 #include <limits.h>
 
