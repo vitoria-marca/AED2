@@ -1,3 +1,6 @@
+# Algoritmos e Estrutura de Dados II
+# Vitória Marca Santa Lucia - 23200755
+
 def algoritmo_kruskal(num_vertices, arestas):
     pai = list(range(num_vertices))
     rank = [0] * num_vertices
