@@ -2,20 +2,23 @@
 # Vitória Marca Santa Lucia - 23200755
 
 def algoritmo_kruskal(num_vertices, arestas):
+    #cada vértice é seu próprio pai
     pai = list(range(num_vertices))
     rank = [0] * num_vertices
 
+    #encontra a raiz do conjunto
     def encontrar_conjunto(i):
-        if pai[i] == i:
+        if pai[i] == i: #caso seja raiz, retorna 
             return i
         pai[i] = encontrar_conjunto(pai[i])
         return pai[i]
     
+    #função que une dois conjuntos
     def unir_conjuntos(i, j):
         raiz_i = encontrar_conjunto(i)
         raiz_j = encontrar_conjunto(j)
 
-        if raiz_i != raiz_j:
+        if raiz_i != raiz_j: #só une caso as raízes estiverem em conjuntos diferentes
             if rank[raiz_i] < rank[raiz_j]:
                 pai[raiz_i] = raiz_j
 
@@ -25,28 +28,33 @@ def algoritmo_kruskal(num_vertices, arestas):
             else:
                 pai[raiz_j] = raiz_i
                 rank[raiz_i] += 1
-            return True
-        return False
+            return True #teve união
+        return False #caso não passe no if, já estavam no mesmo conjunto
     
+
     arestas_mst = []
     mst_custo_total = 0
     num_arestas_na_mst = 0
 
+    #ordena cada aresta em ordem crescente por peso
     arestas_ordenadas = sorted(arestas, key=lambda aresta: aresta[2])
     
+    #cada aresta é processada em ordem
     for u, v, peso in arestas_ordenadas:
-        if unir_conjuntos(u, v):
-            arestas_mst.append((u, v, peso))
-            mst_custo_total += peso
-            num_arestas_na_mst += 1
-            if num_arestas_na_mst == num_vertices - 1:
+        if unir_conjuntos(u, v): #caso não tenha ciclos
+            arestas_mst.append((u, v, peso)) #adiciona a aresta à mst
+            mst_custo_total += peso #atualiza o custo total 
+            num_arestas_na_mst += 1 #incrementa o contador de arestas
+            if num_arestas_na_mst == num_vertices - 1: #caso todas tenham sido testadas
                 break
 
+    #grafo conexo
     if num_vertices > 0 and num_arestas_na_mst < num_vertices - 1:
         print("O grafo não é conexo. Não foi possível formar uma MST completa.")
     
     return arestas_mst, mst_custo_total
 #######################################
+
 # teste 1    
 num_vertices = 9
 arestas = [
