@@ -2,38 +2,46 @@
 # Vitória Marca Santa Lucia - 23200755
 
 def algoritmo_kruskal(num_vertices, arestas):
-    #cada vértice é seu próprio pai
+    #cada vértice é seu próprio pai, inicialmente
     pai = list(range(num_vertices))
+    #inicializa o vetor rank apenas com zeros, para todos os vértices
     rank = [0] * num_vertices
 
-    #encontra a raiz do conjunto
+    #encontra a raiz do conj. que i pertence
     def encontrar_conjunto(i):
-        if pai[i] == i: #caso seja raiz, retorna 
+        if pai[i] == i: #caso ele mesmo seja raiz, retorna 
             return i
+        #se não, recursivamente encontra a raiz do conjunto
         pai[i] = encontrar_conjunto(pai[i])
         return pai[i]
     
     #função que une dois conjuntos
     def unir_conjuntos(i, j):
-        raiz_i = encontrar_conjunto(i)
-        raiz_j = encontrar_conjunto(j)
+        raiz_i = encontrar_conjunto(i) #raiz de i
+        raiz_j = encontrar_conjunto(j) #raiz de j
 
         if raiz_i != raiz_j: #só une caso as raízes estiverem em conjuntos diferentes
+            
+            #caso raiz_j seja mais profunda, então torna-se pai de raiz_i
             if rank[raiz_i] < rank[raiz_j]:
                 pai[raiz_i] = raiz_j
 
+            #se não, o contrário ocorre
             elif rank[raiz_i] > rank[raiz_j]:
                 pai[raiz_j] = raiz_i
-
+            
+            #caso a profundidade seja a mesma, incrementa o rank
             else:
                 pai[raiz_j] = raiz_i
                 rank[raiz_i] += 1
             return True #teve união
         return False #caso não passe no if, já estavam no mesmo conjunto
     
-
+    #lista que armazenará as arestas da mst
     arestas_mst = []
+    #custo da mst
     mst_custo_total = 0
+    #contador para verificar e controlar se temos n-1 arestas
     num_arestas_na_mst = 0
 
     #ordena cada aresta em ordem crescente por peso
@@ -41,6 +49,7 @@ def algoritmo_kruskal(num_vertices, arestas):
     
     #cada aresta é processada em ordem
     for u, v, peso in arestas_ordenadas:
+        #se a aresta conecta dois conjuntos distintos
         if unir_conjuntos(u, v): #caso não tenha ciclos
             arestas_mst.append((u, v, peso)) #adiciona a aresta à mst
             mst_custo_total += peso #atualiza o custo total 
@@ -48,7 +57,7 @@ def algoritmo_kruskal(num_vertices, arestas):
             if num_arestas_na_mst == num_vertices - 1: #caso todas tenham sido testadas
                 break
 
-    #grafo conexo
+    #se não foi possível conectar todos, o grafo não é conexo
     if num_vertices > 0 and num_arestas_na_mst < num_vertices - 1:
         print("O grafo não é conexo. Não foi possível formar uma MST completa.")
     
